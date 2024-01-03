@@ -1,7 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:todo_app/widgets/task_list.dart';
-import 'package:todo_app/screens/add_task_screen.dart'; 
-import 'package:todo_app/screens/settings_screen.dart'; 
+import 'package:todo_app/screens/add_task_screen.dart';
+import 'package:todo_app/screens/settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
