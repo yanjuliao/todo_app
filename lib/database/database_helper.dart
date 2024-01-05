@@ -1,5 +1,8 @@
+// ignore_for_file: unused_import
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:todo_app/models/subtask_model.dart';
 
 class DatabaseHelper {
   static const String _databaseName = 'todo.db';
@@ -36,6 +39,15 @@ class DatabaseHelper {
         isCompleted INTEGER
       )
     ''');
+
+    await db.execute('''
+      CREATE TABLE subtasks (
+        id INTEGER PRIMARY KEY,
+        taskId INTEGER,
+        title TEXT,
+        isCompleted INTEGER
+      )
+    ''');
   }
 
   Future<List<Map<String, dynamic>>> getTasks() async {
@@ -56,5 +68,25 @@ class DatabaseHelper {
   Future<void> deleteTask(int taskId) async {
     Database db = await instance.database;
     await db.delete('tasks', where: 'id = ?', whereArgs: [taskId]);
+  }
+
+  Future<List<Map<String, dynamic>>> getSubtasks(int taskId) async {
+    Database db = await instance.database;
+    return await db.query('subtasks', where: 'taskId = ?', whereArgs: [taskId]);
+  }
+
+  Future<void> insertSubtask(Map<String, dynamic> subtask) async {
+    Database db = await instance.database;
+    await db.insert('subtasks', subtask);
+  }
+
+  Future<void> updateSubtask(Map<String, dynamic> subtask) async {
+    Database db = await instance.database;
+    await db.update('subtasks', subtask, where: 'id = ?', whereArgs: [subtask['id']]);
+  }
+
+  Future<void> deleteSubtask(int subtaskId) async {
+    Database db = await instance.database;
+    await db.delete('subtasks', where: 'id = ?', whereArgs: [subtaskId]);
   }
 }

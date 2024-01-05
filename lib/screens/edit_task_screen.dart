@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/providers/theme_provider.dart';
+import 'package:todo_app/screens/add_subtask_screen.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;
@@ -17,6 +18,7 @@ class EditTaskScreen extends StatefulWidget {
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
   late TextEditingController _taskController;
+  late int _taskId;  
 
   @override
   void initState() {
@@ -64,6 +66,17 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddSubtaskScreen(taskId: _taskId),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

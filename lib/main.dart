@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/providers/theme_provider.dart';
+import 'package:todo_app/providers/subtask_provider.dart';
 import 'package:todo_app/screens/home_screen.dart';
 
 void main() {
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TaskProvider()),
+        ChangeNotifierProvider(create: (context) => SubtaskProvider()),
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
       child: Consumer<ThemeProvider>(

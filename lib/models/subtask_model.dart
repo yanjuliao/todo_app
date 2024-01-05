@@ -1,18 +1,20 @@
-import 'package:todo_app/models/subtask_model.dart';
-class Task {
+class Subtask {
   final int id;
+  final int taskId;
   final String title;
-  final bool isCompleted;
+  bool isCompleted;
 
-  Task({
+  Subtask({
     required this.id,
+    required this.taskId,
     required this.title,
     required this.isCompleted,
   });
 
-  Task copyWith({int? id, String? title, bool? isCompleted, List<Subtask>? subtasks}) {
-    return Task(
+  Subtask copyWith({int? id, int? taskId, String? title, bool? isCompleted}) {
+    return Subtask(
       id: id ?? this.id,
+      taskId: taskId ?? this.taskId,
       title: title ?? this.title,
       isCompleted: isCompleted ?? this.isCompleted,
     );
@@ -21,6 +23,7 @@ class Task {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'taskId': taskId,
       'title': title,
       'isCompleted': isCompleted ? 1 : 0,
     };
