@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/task_provider.dart';
+import 'package:todo_app/providers/theme_provider.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;
@@ -24,7 +25,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   }
 
   void _updateTaskAndNavigateBack(BuildContext context) {
-    TaskProvider taskProvider = Provider.of<TaskProvider>(context, listen: false);
+    TaskProvider taskProvider =
+        Provider.of<TaskProvider>(context, listen: false);
     Task updatedTask = widget.task.copyWith(title: _taskController.text);
     taskProvider.updateTask(updatedTask);
     Navigator.pop(context);
@@ -48,9 +50,17 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _updateTaskAndNavigateBack(context),
-              child: Text('Atualizar Tarefa'),
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return ElevatedButton(
+                  onPressed: () => _updateTaskAndNavigateBack(context),
+                  child: Text(
+                    'Atualizar Tarefa',
+                    style:
+                        TextStyle(color: themeProvider.elevatedButtonTextColor),
+                  ),
+                );
+              },
             ),
           ],
         ),
