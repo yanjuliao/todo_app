@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/task_provider.dart';
-import 'package:todo_app/screens/edit_task_screen.dart';
+import 'package:todo_app/screens/task/edit_task_screen.dart';
 
 class TaskItem extends StatelessWidget {
   final Task task;
@@ -25,14 +25,7 @@ class TaskItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        trailing: Checkbox(
-          value: task.isCompleted,
-          onChanged: (value) {
-            TaskProvider taskProvider =
-                Provider.of<TaskProvider>(context, listen: false);
-            taskProvider.updateTaskStatus(task.id, value!);
-          },              
-        ),
+        trailing: Icon(Icons.edit_note_rounded),
         onTap: () {
           _navigateToEditTaskScreen(context);
         },

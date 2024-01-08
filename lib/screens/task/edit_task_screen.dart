@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/providers/theme_provider.dart';
-import 'package:todo_app/screens/add_subtask_screen.dart';
+import 'package:todo_app/screens/subtask/add_subtask_screen.dart';
+import 'package:todo_app/widgets/subtask/subtask_list.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final Task task;
@@ -18,7 +19,7 @@ class EditTaskScreen extends StatefulWidget {
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
   late TextEditingController _taskController;
-  late int _taskId;  
+  bool _showError = false;
 
   @override
   void initState() {
@@ -27,11 +28,16 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   }
 
   void _updateTaskAndNavigateBack(BuildContext context) {
-    TaskProvider taskProvider =
-        Provider.of<TaskProvider>(context, listen: false);
-    Task updatedTask = widget.task.copyWith(title: _taskController.text);
-    taskProvider.updateTask(updatedTask);
-    Navigator.pop(context);
+    setState(() {
+      _showError = _taskController.text.isEmpty;
+    });
+    if (_taskController.text.isNotEmpty) {
+      TaskProvider taskProvider =
+          Provider.of<TaskProvider>(context, listen: false);
+      Task updatedTask = widget.task.copyWith(title: _taskController.text);
+      taskProvider.updateTask(updatedTask);
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -49,6 +55,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               controller: _taskController,
               decoration: InputDecoration(
                 labelText: 'Titulo da Tarefa',
+                errorText: _showError ? 'Por favor, preencha este campo' : null,
               ),
             ),
             SizedBox(height: 20),
@@ -64,6 +71,8 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 );
               },
             ),
+            SizedBox(height: 20),
+            SubtaskList(task: widget.task),
           ],
         ),
       ),
@@ -72,7 +81,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddSubtaskScreen(taskId: _taskId),
+              builder: (context) => AddSubtaskScreen(task: widget.task),
             ),
           );
         },

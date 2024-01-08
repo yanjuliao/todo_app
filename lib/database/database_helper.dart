@@ -75,6 +75,11 @@ class DatabaseHelper {
     return await db.query('subtasks', where: 'taskId = ?', whereArgs: [taskId]);
   }
 
+    Future<List<Map<String, dynamic>>> getSubtaskById(int id) async {
+    Database db = await instance.database;
+    return await db.query('subtasks', where: 'Id = ?', whereArgs: [id]);
+  }
+
   Future<void> insertSubtask(Map<String, dynamic> subtask) async {
     Database db = await instance.database;
     await db.insert('subtasks', subtask);

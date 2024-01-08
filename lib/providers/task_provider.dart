@@ -11,9 +11,13 @@ class TaskProvider extends ChangeNotifier {
     return await _databaseHelper.getTasks();
   }
 
-  Future<int> addTask(String title) async {
-    int taskId = _generateId();
+  Future<List<Map<String, dynamic>>> getTasksById(taskId) async {
+    return await _databaseHelper.getTasks();
+  }
 
+  Future<void> addTask(String title) async {
+    int taskId = _generateId();
+  
     Map<String, dynamic> task = {
       'id': taskId,
       'title': title,
@@ -22,8 +26,6 @@ class TaskProvider extends ChangeNotifier {
 
     await _databaseHelper.insertTask(task);
     notifyListeners();
-
-    return taskId;
   }
 
   Future<void> updateTask(Task updatedTask) async {

@@ -5,16 +5,14 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:todo_app/database/database_helper.dart';
 import 'package:todo_app/models/subtask_model.dart';
+import 'package:todo_app/models/task_model.dart';
 
 class SubtaskProvider extends ChangeNotifier {
   DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   List<Subtask> _subtasks = [];
   List<Subtask> get subtasks => _subtasks;
-  int _currentTaskId = 0;
 
-  Future<void> loadSubtasks(int taskId) async {
-    _currentTaskId = taskId;
-
+  Future<List<Subtask>> loadSubtasks(int taskId) async {
     List<Map<String, dynamic>> subtasksData =
         await _databaseHelper.getSubtasks(taskId);
 
@@ -28,65 +26,67 @@ class SubtaskProvider extends ChangeNotifier {
     }).toList();
 
     notifyListeners();
+
+    return _subtasks;
   }
 
-  Future<int> addSubtask(int taskId, String title) async {
-  int subtaskId = _generateSubtaskId();
+  Future<List<Map<String, dynamic>>> getSubTasks(taskId) async {
+    return await _databaseHelper.getSubtasks(taskId);
+  }
 
-  Subtask subtask = Subtask(
-    id: subtaskId,
-    taskId: taskId,
-    title: title,
-    isCompleted: false,
-  );
+  Future<List<Map<String, dynamic>>> getSubTaskById(int id) async {
+    return await _databaseHelper.getSubtaskById(id);
+  }
 
-  await _databaseHelper.insertSubtask(subtask.toMap());
-  _subtasks.add(subtask);
-  notifyListeners();
+  Future<void> addSubtask(String title, int taskId) async {
+    int subtaskId = _generateSubtaskId();
+    _subtasks.clear();
+    _subtasks = await loadSubtasks(taskId);
 
-  return subtaskId;
-}
+    Map<String, dynamic> subTask = {
+      'id': subtaskId,
+      'taskId': taskId,
+      'title': title,
+      'isCompleted': false,
+    };
 
-  Future<void> updateSubtaskStatus(int subtaskId, bool isCompleted) async {
-    Subtask subtask =
-        _subtasks.firstWhere((subtask) => subtask.id == subtaskId);
-    subtask.isCompleted = isCompleted;
-
-    await _databaseHelper.updateSubtask(subtask.toMap());
+    await _databaseHelper.insertSubtask(subTask);
     notifyListeners();
   }
 
-  Future<void> updateSubtask(int subtaskId, String title) async {
-  Subtask subtask =
-      _subtasks.firstWhere((subtask) => subtask.id == subtaskId);
+  Future<void> updateSubtaskStatus(
+      Subtask updatedSubtask, bool isCompleted) async {
+    _subtasks.clear();
 
-  Subtask updatedSubtask = Subtask(
-    id: subtask.id,
-    taskId: subtask.taskId,
-    title: title,
-    isCompleted: subtask.isCompleted,
-  );
+    _subtasks = await loadSubtasks(updatedSubtask.taskId);
 
-  int subtaskIndex = _subtasks.indexWhere((subtask) => subtask.id == subtaskId);
-  _subtasks[subtaskIndex] = updatedSubtask;
+    Subtask existingSubtask =
+        _subtasks.firstWhere((subtask) => subtask.id == updatedSubtask.id);
 
-  await _databaseHelper.updateSubtask(updatedSubtask.toMap());
-  notifyListeners();
-}
+    existingSubtask.isCompleted = isCompleted;
 
-  Future<void> deleteSubtask(int subtaskId) async {
-    await _databaseHelper.deleteSubtask(subtaskId);
-    _subtasks.removeWhere((subtask) => subtask.id == subtaskId);
+    await _databaseHelper.updateSubtask(existingSubtask.toMap());
+
+    notifyListeners();
+  }
+
+  Future<void> updateSubtask(Subtask updatedSubTask) async {
+    _subtasks.clear();
+    _subtasks = await loadSubtasks(updatedSubTask.taskId);
+
+    await _databaseHelper.updateSubtask(updatedSubTask.toMap());
+    notifyListeners();
+  }
+
+  Future<void> deleteSubtask(Subtask deletedSubtask) async {
+    await _databaseHelper.deleteSubtask(deletedSubtask.id);
+    _subtasks.removeAt(deletedSubtask.id);
     notifyListeners();
   }
 
   int _generateSubtaskId() {
     DateTime now = DateTime.now();
-    int taskId = now.microsecondsSinceEpoch;
-    return taskId;
-  }
-
-  int getCurrentTaskId() {
-    return _currentTaskId;
+    int subtaskId = now.microsecondsSinceEpoch;
+    return subtaskId;
   }
 }

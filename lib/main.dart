@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/providers/task_provider.dart';
 import 'package:todo_app/providers/theme_provider.dart';
 import 'package:todo_app/providers/subtask_provider.dart';
-import 'package:todo_app/screens/home_screen.dart';
+import 'package:todo_app/screens/utils/home_screen.dart';
 
 void main() {
   runApp(MyApp());
