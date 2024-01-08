@@ -9,4 +9,4 @@ Projeto para gestão de tarefas feito com Flutter
 ## Implementação do Tema Escuro
 
 ![Alt text](image-5.png)![Alt text](image-6.png)!
-[Alt text](image-7.png)![Alt text](image-8.png)
+[Alt text](image-7.png)![Alt text](image-8.png)!
